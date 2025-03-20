@@ -5,6 +5,11 @@ import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import HomePage from "../pages/HomePage";
 import AuthLayout from "../layout/AuthLayout";
+import ProtectedRoute from "../../../../Javascript/SegundoTrimestre/Isaias/Curso-React-2025-M/proyectos/06-relacion-repaso - copia/ejercicio1/src/components/ProtectedRoute";
+import ApplicationPage from "../pages/ApplicationPage";
+import NewReparationPage from "../pages/NewReparationPage";
+import NewInstallationPage from "../pages/NewInstallationPage";
+import NewMaintenancePage from "../pages/NewMaintenancePage";
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +21,45 @@ export const router = createBrowserRouter([
         index: true,
         element: <HomePage />,
       },
+      {
+        path: "application",
+        children:[
+          {
+            index:true,
+            element:(
+              <ProtectedRoute>
+                <ApplicationPage />
+              </ProtectedRoute>
+            )
+          },
+          {
+            path:"reparation/new",
+            element:(
+              <ProtectedRoute>
+                <NewReparationPage />
+              </ProtectedRoute>
+            )
+          },
+          {
+            path:"installation/new",
+            element:(
+              <ProtectedRoute>
+                <NewInstallationPage />
+              </ProtectedRoute>
+            )
+          },
+          {
+            path:"maintenance/new",
+            element:(
+              <ProtectedRoute>
+                <NewMaintenancePage />
+              </ProtectedRoute>
+            )
+          }
+        ],
+        
+      },
+      
     ],
   },
   {
