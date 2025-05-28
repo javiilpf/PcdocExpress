@@ -46,7 +46,7 @@ const ProductDetailPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex justify-center items-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-lime-500"></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-amber-500"></div>
       </div>
     );
   }
@@ -104,7 +104,7 @@ const ProductDetailPage = () => {
                   ))}
                 </div>
           <p className="text-gray-600 text-sm mb-4">{product.description}</p>
-          <span className="text-lg font-bold text-lime-600 mb-4 block">
+          <span className="text-lg font-bold text-amber-600 mb-4 block">
             {product.price}€
           </span>
 
@@ -125,7 +125,7 @@ const ProductDetailPage = () => {
 
           <button
             onClick={handleAddToCart}
-            className="w-full bg-lime-500 text-white py-2 rounded-md hover:bg-lime-600 transition-colors duration-300"
+            className="w-full bg-amber-500 text-white py-2 rounded-md hover:bg-amber-600 transition-colors duration-300"
           >
             Añadir al carrito
           </button>

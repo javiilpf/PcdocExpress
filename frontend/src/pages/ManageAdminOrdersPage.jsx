@@ -47,7 +47,7 @@ const ManageAdminOrdersPage = () => {
   if (maintenanceLoading || installationLoading || reparationLoading) {
     return (
       <div className="min-h-screen flex justify-center items-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-amber-500"></div>
       </div>
     );
   }
@@ -148,7 +148,7 @@ const ManageAdminOrdersPage = () => {
 
       {/* Mantenimientos */}
       <div className="mb-16">
-        <h2 className="text-3xl font-semibold mb-6 text-blue-600 border-b-2 border-blue-600 pb-2">Mantenimientos</h2>
+        <h2 className="text-3xl font-semibold mb-6 text-amber-600 border-b-2 border-amber-600 pb-2">Mantenimientos</h2>
         {maintenances.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {maintenances.map((maintenance) => (

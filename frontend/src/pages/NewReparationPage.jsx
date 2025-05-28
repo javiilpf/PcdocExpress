@@ -134,7 +134,7 @@ const NewReparationPage = () => {
                   name="ram" // Asegúrate de incluir el atributo name
                   onChange={handleChange}
                   value={formData.ram} // Vincula el valor al estado
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-lime-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   placeholder="Ejemplo: 16 GB"
                 />
               </div>
@@ -150,7 +150,7 @@ const NewReparationPage = () => {
                   name="storage" // Asegúrate de incluir el atributo name
                   onChange={handleChange}
                   value={formData.storage} // Vincula el valor al estado
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-lime-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   placeholder="Ejemplo: 512 GB SSD"
                 />
               </div>
@@ -163,7 +163,7 @@ const NewReparationPage = () => {
                 <textarea
                   id="issue_description"
                   name="issue_description" // Asegúrate de incluir el atributo name
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-lime-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   onChange={handleChange}
                   value={formData.issue_description} // Vincula el valor al estado
                   rows="3"
@@ -181,7 +181,7 @@ const NewReparationPage = () => {
                   name="observations" // Asegúrate de incluir el atributo name
                   onChange={handleChange}
                   value={formData.observations} // Vincula el valor al estado
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-lime-400"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-400"
                   rows="3"
                   placeholder="Añade cualquier otra observación importante"
                 />
@@ -191,7 +191,7 @@ const NewReparationPage = () => {
               <div className="text-center">
                 <button
                   type="submit"
-                  className="w-full bg-lime-500 text-white font-semibold py-3 rounded-md hover:bg-lime-600 transition duration-300"
+                  className="w-full bg-amber-500 text-white font-semibold py-3 rounded-md hover:bg-amber-600 transition duration-300"
                 >
                   Enviar
                 </button>

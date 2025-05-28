@@ -91,7 +91,7 @@ const CartPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex justify-center items-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-lime-500"></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-amber-500"></div>
       </div>
     );
   }
@@ -155,7 +155,7 @@ const CartPage = () => {
                         parseInt(e.target.value, 10)
                       )
                     }
-                    className="border rounded-lg px-3 py-1 w-16 text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="border rounded-lg px-3 py-1 w-16 text-center focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
                 </div>
                 {/* Eliminar producto */}
@@ -174,7 +174,7 @@ const CartPage = () => {
               Total: €{calculateTotal().toFixed(2)}
             </h2>
             <button
-              className="mt-4 bg-lime-500 text-white px-6 py-2 rounded-lg hover:bg-lime-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-4 bg-amber-500 text-white px-6 py-2 rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500"
               onClick={() => alert("¡Gracias por tu compra!")}
             >
               Pagar

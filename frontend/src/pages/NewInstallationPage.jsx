@@ -89,7 +89,7 @@ const NewInstallationPage = () => {
                 <input
                   type="text"
                   id="model"
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   placeholder="Ingresa el modelo del dispositivo"
                   value={installationDetails.model}
                   onChange={(e) =>
@@ -109,7 +109,7 @@ const NewInstallationPage = () => {
                 <input
                   type="text"
                   id="processor"
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   placeholder="Ingresa el procesador"
                   value={installationDetails.processor}
                   onChange={(e) =>
@@ -129,7 +129,7 @@ const NewInstallationPage = () => {
                 <input
                   type="text"
                   id="ram"
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   placeholder="Ingresa la cantidad de RAM"
                   value={installationDetails.ram}
                   onChange={(e) =>
@@ -149,7 +149,7 @@ const NewInstallationPage = () => {
                 <input
                   type="text"
                   id="storage"
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   placeholder="Ingresa la capacidad de almacenamiento"
                   value={installationDetails.storage}
                   onChange={(e) =>
@@ -169,7 +169,7 @@ const NewInstallationPage = () => {
               </label>
               <select
                 id="component"
-                className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                 value={selectedComponent}
                 onChange={(e) => setSelectedComponent(e.target.value)}
               >
@@ -196,7 +196,7 @@ const NewInstallationPage = () => {
                 <input
                   type="text"
                   id="searchComponent"
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   placeholder={`Buscar ${selectedComponent}`}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -210,7 +210,7 @@ const NewInstallationPage = () => {
                       key={product.id}
                       className={`p-2 border rounded-md mb-2 cursor-pointer flex items-center hover:bg-gray-100 ${
                         selectedProduct?.id === product.id
-                          ? "bg-blue-100 border-blue-500"
+                          ? "bg-amber-100 border-amber-500"
                           : ""
                       }`}
                       onClick={() => setSelectedProduct(product)}
@@ -236,7 +236,7 @@ const NewInstallationPage = () => {
             {/* Botón de envío */}
             <button
               type="submit"
-              className="w-full bg-lime-500 text-white px-4 py-2 rounded hover:bg-lime-700 transition-colors"
+              className="w-full bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-700 transition-colors"
             >
               Enviar
             </button>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import PacmanLoader from "react-spinners/PacmanLoader";
+import { toast } from "sonner";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -25,18 +26,56 @@ const RegisterPage = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await register(formData);
-      navigate("/");
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  try {
+    await register(formData);
+    navigate("/");
+    toast.success(`¡Bienvenido, ${formData.email}!`, {
+      style: {
+        background: "linear-gradient(#FFB300, #FFA000)", // Efecto degradado
+        color: "white",
+        borderRadius: "8px",
+        padding: "12px",
+        border: "2px solid #1b5e20",
+        marginTop: "180px",
+      },
+      icon: "✅",
+      duration: 4000,
+    });
+  } catch (error) {
+    setError(error.message);
+    const errorMessage = error.message?.toLowerCase();
+    
+    if (errorMessage.includes("duplicate entry") || errorMessage.includes("user already exists")) {
+      toast.info("Este email ya está registrado. Intenta iniciar sesión.", {
+        style: {
+          background: "white", // Efecto degradado
+          color: "black",
+          borderRadius: "8px",
+          padding: "12px",
+          border: "2px solidrgb(255, 255, 255)",
+        },
+        icon: "🚨",
+        duration: 4000,
+      });
+    } else {
+      toast.error(`Error: ${error.message}`, {
+        style: {
+          background: "#d32f2f",
+          color: "white",
+          borderRadius: "8px",
+          padding: "12px",
+        },
+        icon: "❌",
+        duration: 4000,
+      });
     }
-  };
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="relative w-screen h-screen overflow-hidden">
@@ -59,7 +98,7 @@ const RegisterPage = () => {
             <>
               <div className="absolute inset-0 backdrop-blur-sm z-10 rounded-2xl" />
               <div className="absolute inset-0 flex items-center justify-center z-20">
-                <PacmanLoader color="lime" size={25} />
+                <PacmanLoader color="amber" size={25} />
               </div>
             </>
           )}
@@ -86,7 +125,7 @@ const RegisterPage = () => {
                     placeholder="Correo Electrónico"
                     required
                     onChange={handleChange}
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-lime-500 transition"
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
                   />
                 </div>
                 <div>
@@ -104,14 +143,14 @@ const RegisterPage = () => {
                     placeholder="********"
                     required
                     onChange={handleChange}
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-lime-500 transition"
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
                   />
                 </div>
                 <button
                   type="submit"
                   className={`w-full py-2 px-4 font-semibold rounded-md transition duration-300 shadow-md ${
                     isFormValid
-                      ? "bg-lime-500 hover:bg-lime-600 text-white"
+                      ? "bg-amber-500 hover:bg-amber-600 text-white"
                       : "bg-gray-300 text-gray-500 cursor-not-allowed"
                   }`}
                   disabled={!isFormValid}
@@ -122,7 +161,7 @@ const RegisterPage = () => {
                   ¿Ya tienes una cuenta?{" "}
                   <Link
                     to="/auth/login"
-                    className="text-lime-600 hover:underline font-medium"
+                    className="text-amber-600 hover:underline font-medium"
                   >
                     Inicia sesión
                   </Link>
@@ -130,7 +169,7 @@ const RegisterPage = () => {
                 <div className="mt-4 text-center">
                   <Link
                     to="/"
-                    className="text-sm text-lime-600 hover:underline"
+                    className="text-sm text-amber-600 hover:underline"
                   >
                     Volver al inicio
                   </Link>
@@ -141,6 +180,7 @@ const RegisterPage = () => {
         </div>
       </div>
     </div>
+
   );
 };
 

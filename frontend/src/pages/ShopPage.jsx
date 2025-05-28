@@ -52,7 +52,7 @@ const ShopPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex justify-center items-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-lime-500"></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-amber-500"></div>
       </div>
     );
   }
@@ -111,7 +111,7 @@ const ShopPage = () => {
               </p>
 
               <div className="mt-auto">
-                <span className="text-lg font-bold text-lime-600 block mb-1">
+                <span className="text-lg font-bold text-amber-600 block mb-1">
                   {product.price}€
                 </span>
 
@@ -135,7 +135,7 @@ const ShopPage = () => {
 
                 <button
                   onClick={() => handleAddToCart(product)}
-                  className="w-full bg-lime-400 text-neutral-50 py-2 rounded-md hover:bg-lime-700 hover:text-white transition-colors duration-300"
+                  className="w-full bg-amber-400 text-neutral-50 py-2 rounded-md hover:bg-amber-700 hover:text-white transition-colors duration-300"
                 >
                   Añadir al carrito
                 </button>

@@ -27,7 +27,7 @@ const RootLayout = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <nav className="fixed top-0 left-0 w-full bg-gradient-to-r from-lime-300 to-lime-600 shadow-lg z-50 transition-all duration-300">
+      <nav className="fixed top-0 left-0 w-full bg-gradient-to-r from-amber-200 to-amber-400 shadow-lg z-50 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center relative">
           <div className="text-2xl font-bold text-white">
             <Link to="/">
@@ -54,7 +54,7 @@ const RootLayout = () => {
           {/* Menú desplegable */}
           <div
             ref={menuRef}
-            className={`absolute top-full left-0 w-full bg-lime-300 lg:bg-transparent lg:static lg:w-auto lg:block transition-all duration-500 overflow-hidden lg:overflow-visible ${
+            className={`absolute top-full left-0 w-full bg-amber-200 lg:bg-transparent lg:static lg:w-auto lg:block transition-all duration-500 overflow-hidden lg:overflow-visible ${
               menuOpen ? "max-h-[1000px] py-4 shadow-lg" : "max-h-0"
             } lg:max-h-none`}
           >
@@ -226,7 +226,7 @@ const RootLayout = () => {
                   <li>
                     <button
                       onClick={logout}
-                      className="w-full text-center md:w-auto bg-white text-red-700 px-6 py-3 rounded-lg font-semibold text-lg hover:bg-gray-400 transition"
+                      className="w-full text-center md:w-auto bg-white text-red-700 px-6 py-3 rounded-lg font-semibold text-lg hover:bg-red-500 hover:text-white transition-250"
                     >
                       Cerrar sesión
                     </button>
@@ -242,7 +242,7 @@ const RootLayout = () => {
         <Outlet />
       </div>
 
-      <footer className="bg-gradient-to-r from-lime-700 to-lime-900 shadow-lg z-50 text-white py-6">
+      <footer className="bg-gradient-to-r from-amber-300 to-amber-400 shadow-lg z-50 text-white py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-center">
             &copy; 2025 Pcdoc Express. Todos los derechos reservados.

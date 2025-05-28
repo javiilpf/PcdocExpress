@@ -28,11 +28,12 @@ const LoginPage = () => {
       navigate("/");
       toast.success(`¡Bienvenido, ${formData.email}`, {
         style: {
-          background: "linear-gradient(135deg, #4caf50, #388e3c)", // Efecto degradado
+          background: "linear-gradient(#FFB300, #FFA000)", // Efecto degradado
           color: "white",
           borderRadius: "8px",
           padding: "12px",
           border: "2px solid #1b5e20",
+          marginTop: "180px",
         },
         icon: "✅",
         duration: 4000,
@@ -78,7 +79,7 @@ const LoginPage = () => {
         <div className="w-full max-w-md p-8 bg-white bg-opacity-90 shadow-2xl rounded-2xl backdrop-blur-md">
           {loading && (
             <div className="absolute inset-0 flex items-center justify-center rounded-2xl z-10">
-              <PacmanLoader color="lime" size={25} />
+              <PacmanLoader color="amber" size={25} />
             </div>
           )}
 
@@ -104,7 +105,7 @@ const LoginPage = () => {
                     placeholder="Correo Electrónico"
                     required
                     onChange={handleChange}
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-lime-500 transition"
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
                   />
                 </div>
                 <div>
@@ -122,12 +123,12 @@ const LoginPage = () => {
                     placeholder="********"
                     required
                     onChange={handleChange}
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-lime-500 transition"
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-2 px-4 bg-lime-500 hover:bg-lime-600 text-white font-semibold rounded-md transition duration-300 shadow-md"
+                  className="w-full py-2 px-4 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-md transition duration-300 shadow-md"
                 >
                   Iniciar Sesión
                 </button>
@@ -135,7 +136,7 @@ const LoginPage = () => {
                   ¿No tienes una cuenta?{" "}
                   <Link
                     to="/auth/register"
-                    className="text-lime-600 hover:underline font-medium"
+                    className="text-amber-600 hover:underline font-medium"
                   >
                     Regístrate aquí
                   </Link>
@@ -143,7 +144,7 @@ const LoginPage = () => {
                 <div className="mt-4 text-center">
                   <Link
                     to="/"
-                    className="text-sm text-lime-600 hover:underline"
+                    className="text-sm text-amber-600 hover:underline"
                   >
                     Volver al inicio
                   </Link>

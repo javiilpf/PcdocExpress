@@ -1,30 +1,25 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import React from 'react';
+import { useParams } from 'react-router-dom';
 
 const ErrorPage = () => {
-  const {error}=useParams();
-  if (error === '404') {
-        return (
-          <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h1 className="text-6xl font-bold text-red-600">404</h1>
-            <p className="text-xl mt-4">Página no encontrada</p>
-          </div>
-        );
-      } else {
-        return (
-          <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h1 className="text-6xl font-bold text-red-600">Error</h1>
-            <p className="text-xl mt-4">{error}</p>
-          </div>
-        );
-      }
-    
-  return (
-      <div>
-        <h1 className="text-4xl font-bold text-center mt-20">Error</h1>
-        <p className="text-center mt-4">Ha ocurrido un error inesperado.</p>
-      </div>
-  )
-}
+  const { error } = useParams();
 
-export default ErrorPage
+  let title = "Error";
+  let message = "Todavía no tenemos esta página. ¡Vuelve más tarde!";
+
+  if (error === '404') {
+    title = "404";
+    message = "Página no encontrada";
+  } else if (error) {
+    message = error;
+  }
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-amber-100">
+      <h1 className="text-6xl font-bold text-amber-600">{title}</h1>
+      <p className="text-xl mt-4 text-amber-700">{message}</p>
+    </div>
+  );
+};
+
+export default ErrorPage;

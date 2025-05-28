@@ -151,7 +151,7 @@ const HomePage = () => {
             {/* Reparación */}
             <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center hover:scale-105 transition">
               <img
-                src="/images/repair-icon.png"
+                src="/images/icono_mantenimiento.png"
                 alt="Reparación"
                 className="w-16 h-16 mb-4"
               />
@@ -166,11 +166,11 @@ const HomePage = () => {
             {/* Mantenimiento */}
             <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center hover:scale-105 transition">
               <img
-                src="/images/maintenance-icon.png"
+                src="/images/mantenimiento3.png"
                 alt="Mantenimiento"
                 className="w-16 h-16 mb-4"
               />
-              <h3 className="text-xl font-semibold text-blue-700 mb-2">
+              <h3 className="text-xl font-semibold text-amber-700 mb-2">
                 Mantenimiento
               </h3>
               <p className="text-gray-600 text-center">
@@ -181,7 +181,7 @@ const HomePage = () => {
             {/* Instalación */}
             <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center hover:scale-105 transition">
               <img
-                src="/images/install-icon.png"
+                src="/images/computerinstallation.png"
                 alt="Instalación"
                 className="w-16 h-16 mb-4"
               />
@@ -196,7 +196,7 @@ const HomePage = () => {
             {/* Tienda Online */}
             <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center hover:scale-105 transition">
               <img
-                src="/images/shop-icon.png"
+                src="/images/icono-tienda.png"
                 alt="Tienda Online"
                 className="w-16 h-16 mb-4"
               />
@@ -244,7 +244,7 @@ const HomePage = () => {
               </p>
             </div>
             <div className="p-6 bg-gray-100 rounded-lg shadow-lg flex flex-col items-center hover:scale-105 transition">
-              <h3 className="text-lg font-medium text-blue-700 mb-2">
+              <h3 className="text-lg font-medium text-amber-700 mb-2">
                 2. Recogida a domicilio
               </h3>
               <p className="text-gray-600 text-center">
@@ -291,7 +291,7 @@ const HomePage = () => {
               </p>
             </div>
             <div className="p-8 bg-white rounded-lg shadow-md flex flex-col items-center">
-              <h3 className="text-lg font-semibold text-blue-700 mb-2">
+              <h3 className="text-lg font-semibold text-amber-700 mb-2">
                 Garantía y transparencia
               </h3>
               <p className="text-gray-600 text-center">

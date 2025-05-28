@@ -74,7 +74,7 @@ const CreateProductsPage = () => {
                   name="product_name"
                   value={formData.product_name}
                   onChange={handleInputChange}
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   required
                 />
               </div>
@@ -89,7 +89,7 @@ const CreateProductsPage = () => {
                   name="price"
                   value={formData.price}
                   onChange={handleInputChange}
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   required
                 />
               </div>
@@ -104,7 +104,7 @@ const CreateProductsPage = () => {
                   name="stock"
                   value={formData.stock}
                   onChange={handleInputChange}
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   required
                 />
               </div>
@@ -119,7 +119,7 @@ const CreateProductsPage = () => {
                   name="valoration"
                   value={formData.valoration}
                   onChange={handleInputChange}
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   required
                 />
               </div>
@@ -133,7 +133,7 @@ const CreateProductsPage = () => {
                   name="type"
                   value={formData.type}
                   onChange={handleInputChange}
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   required
                 >
                   <option value="mobile">Móvil</option>
@@ -160,7 +160,7 @@ const CreateProductsPage = () => {
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   rows={4}
                   required
                 />
@@ -172,7 +172,7 @@ const CreateProductsPage = () => {
                   type="file"
                   multiple
                   onChange={handleImageChange}
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   required
                 />
               </div>
@@ -180,7 +180,7 @@ const CreateProductsPage = () => {
 
             <button
               type="submit"
-              className="w-full bg-lime-500 text-white px-4 py-2 rounded hover:bg-lime-700 transition-colors"
+              className="w-full bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-700 transition-colors"
               disabled={loading}
             >
               {loading ? "Creando..." : "Crear Producto"}

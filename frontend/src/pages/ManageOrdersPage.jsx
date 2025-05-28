@@ -77,7 +77,7 @@ const ManageOrdersPage = () => {
   if (loading || maintenanceLoading || reparationLoading || installationLoading) {
     return (
       <div className="min-h-screen flex justify-center items-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-lime-500"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-amber-500"></div>
       </div>
     );
   }
@@ -88,7 +88,7 @@ const ManageOrdersPage = () => {
 
       {/* Mantenimientos no asignados */}
       <div className="mb-8">
-      <h2 className="text-3xl font-semibold mb-6 text-blue-600 border-b-2 border-blue-600 pb-2">Mantenimientos</h2>
+      <h2 className="text-3xl font-semibold mb-6 text-amber-600 border-b-2 border-amber-600 pb-2">Mantenimientos</h2>
         {maintenances.length > 0 ? (
           <ul className="space-y-4">
             {maintenances.map((maintenance) => (
@@ -111,7 +111,7 @@ const ManageOrdersPage = () => {
                 </p>
                 <button
                   onClick={() => handleAcceptOrder("maintenance", maintenance.id)}
-                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300"
+                  className="mt-4 bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600 transition duration-300"
                 >
                   Aceptar
                 </button>
@@ -144,7 +144,7 @@ const ManageOrdersPage = () => {
                 </p>
                 <button
                   onClick={() => handleAcceptOrder("reparation", reparation.id)}
-                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-300"
+                  className="mt-4 bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600 transition duration-300"
                 >
                   Aceptar
                 </button>
@@ -164,7 +164,7 @@ const ManageOrdersPage = () => {
             {installations.map((installation) => (
               <li
                 key={installation.id}
-                className="p-6 bg-gradient-to-br from-lime-100 to-green-200 shadow-lg rounded-xl border border-green-300 hover:shadow-2xl transition-shadow duration-300"
+                className="p-6 bg-gradient-to-br from-amber-100 to-green-200 shadow-lg rounded-xl border border-green-300 hover:shadow-2xl transition-shadow duration-300"
               >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div>

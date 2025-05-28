@@ -175,7 +175,7 @@ const NewMaintenancePage = () => {
               <div className="text-center">
                 <button
                   type="submit"
-                  className="w-full bg-lime-500 text-white font-semibold py-3 rounded-md hover:bg-lime-600 transition duration-300"
+                  className="w-full bg-amber-500 text-white font-semibold py-3 rounded-md hover:bg-amber-600 transition duration-300"
                 >
                   Enviar
                 </button>

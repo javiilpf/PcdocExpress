@@ -129,6 +129,10 @@ export const router = createBrowserRouter([
     ],
   },
   {
+    path: "/404",
+    element: <ErrorPage />,
+  },
+  {
     path: "*",
     element: <Navigate to="/404" replace />,
   },
