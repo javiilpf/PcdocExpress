@@ -1,0 +1,16 @@
+nelmio_cors:
+    defaults:
+        allow_origin: ['http://localhost:3000']
+        allow_methods: ['GET', 'POST', 'PATCH', 'OPTIONS', 'PUT', 'DELETE']
+        allow_headers: ['Content-Type', 'Authorization', 'Origin', 'Accept']
+        expose_headers: ['Link']
+        max_age: 3600
+        allow_credentials: true
+    paths:
+        '^/':  # Aplicar CORS a todas las rutas
+            allow_origin: ['http://localhost:3000']
+            allow_methods: ['GET', 'POST', 'OPTIONS', 'PATCH', 'PUT', 'DELETE']
+            allow_headers: ['Content-Type', 'Authorization', 'Origin', 'Accept']
+            expose_headers: ['Link']
+            max_age: 3600
+            allow_credentials: true
