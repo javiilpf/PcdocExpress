@@ -178,8 +178,96 @@ export const ReparationProvider = ({ children }) => {
         }
     };
 
+    // Admin: enviar presupuesto y comentario
+const sendAdminFeedback = async (id, estimatedPrice, adminComments) => {
+    setLoading(true);
+    try {
+        const response = await fetch(`${url}/reparation/${id}/feedback`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ estimatedPrice, adminComments }),
+        });
+        if (!response.ok) throw new Error("Error al enviar feedback");
+        const data = await response.json();
+        setAdminReparations((prev) =>
+            prev.map((rep) => (rep.id === id ? data.data : rep))
+        );
+        return data.data;
+    } catch (err) {
+        setError(err.message);
+    } finally {
+        setLoading(false);
+    }
+};
+
+// Cliente: aceptar/rechazar presupuesto
+const sendClientApproval = async (id, clientApproval, clientComments) => {
+    setLoading(true);
+    try {
+        const response = await fetch(`${url}/reparation/${id}/client-approval`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ clientApproval, clientComments }),
+        });
+        if (!response.ok) throw new Error("Error al enviar respuesta");
+        const data = await response.json();
+        setReparations((prev) =>
+            prev.map((rep) => (rep.id === id ? data.data : rep))
+        );
+        return data.data;
+    } catch (err) {
+        setError(err.message);
+    } finally {
+        setLoading(false);
+    }
+};
+
+// Admin: marcar como completada
+const completeReparation = async (id) => {
+    setLoading(true);
+    try {
+        const response = await fetch(`${url}/reparation/${id}/complete`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        if (!response.ok) throw new Error("Error al completar reparación");
+        const data = await response.json();
+        setAdminReparations((prev) =>
+            prev.map((rep) => (rep.id === id ? data.data : rep))
+        );
+        return data.data;
+    } catch (err) {
+        setError(err.message);
+    } finally {
+        setLoading(false);
+    }
+};
+
     return (
-        <ReparationContext.Provider value={{ Reparations, createReparation, getUserReparations, loading, AdminReparations, ReparationsUnasigned, AsignAdminMaintenance, getAsignedReparations, error, updateReparation, approveReparation }}>
+        <ReparationContext.Provider value={{
+            Reparations,
+            createReparation,
+            getUserReparations,
+            loading,
+            AdminReparations,
+            ReparationsUnasigned,
+            AsignAdminMaintenance,
+            getAsignedReparations,
+            error,
+            updateReparation,
+            approveReparation,
+            sendAdminFeedback,
+            sendClientApproval,
+            completeReparation
+        }}>
             {children}
         </ReparationContext.Provider>
     );

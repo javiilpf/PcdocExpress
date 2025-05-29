@@ -6,8 +6,8 @@ import { useInstallation } from "../context/InstallationContext";
 
 const OrdersPage = () => {
   const { maintenances, getUserMaintenances } = useMaintenance();
-  const { Reparations, getUserReparations, approveReparation } = useReparation();
-  const { installations, sendClientApproval,getUserInstallations, payInstallation } = useInstallation();
+  const { Reparations, getUserReparations, sendClientApproval } = useReparation();
+  const { installations, getUserInstallations, payInstallation } = useInstallation();
   const [clientComments, setClientComments] = useState({});
 
   const { user } = useAuth();
@@ -20,16 +20,6 @@ const OrdersPage = () => {
     }
   }, [user]);
 
-  const handleApproval = async (id, approval) => {
-    try {
-        await approveReparation(id, approval);
-        alert(`Has ${approval === 'approved' ? 'aprobado' : 'rechazado'} el presupuesto.`);
-    } catch (err) {
-        console.error('Error al actualizar el estado de aprobación:', err);
-        alert('Hubo un error al actualizar el estado de aprobación.');
-    }
-};
-
   return (
     <div className="mt-6 w-full p-6 bg-white rounded-lg shadow-lg pt-30">
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Tus Servicios Realizados</h2>
@@ -40,26 +30,10 @@ const OrdersPage = () => {
         {Reparations && Reparations.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Reparations.map((reparation) => {
-              // Mapeo del estado
-              const stateText =
-                reparation.state === 1
-                  ? "Pendiente"
-                  : reparation.state === 2
-                  ? "En proceso"
-                  : "Completado";
-
-              // Definir colores para cada estado
-              const stateColors = {
-                Pendiente: "bg-yellow-200 text-yellow-800",
-                "En proceso": "bg-blue-200 text-blue-800",
-                Completado: "bg-green-200 text-green-800",
-              };
+              
 
               return (
-                <div
-                  key={reparation.id}
-                  className="p-4 border rounded-lg shadow-md bg-gray-50 hover:shadow-lg transition-shadow duration-300"
-                >
+                <div key={reparation.id} className="p-4 border rounded-lg shadow-md bg-gray-50 hover:shadow-lg transition-shadow duration-300">
                   <h4 className="text-lg font-bold text-gray-800 mb-2">Modelo: {reparation.model}</h4>
                   <p className="text-sm text-gray-600">
                     <span className="font-medium">Procesador:</span> {reparation.processor}
@@ -87,33 +61,47 @@ const OrdersPage = () => {
                   <p className="text-sm text-gray-600">
                     <span className="font-medium">Precio estimado:</span> {reparation.estimatedPrice ? `${reparation.estimatedPrice} €` : 'Todavía sin precio estimado'}
                   </p>
-                  <p
-                    className={`text-sm font-medium p-2 rounded-md inline-block mt-2 ${stateColors[stateText]}`}
-                  >
-                    Estado: {stateText}
-                  </p>
+                  {reparation.adminComments && (
+                    <p className="text-sm text-gray-700 mt-1">
+                      <span className="font-medium">Comentario del técnico:</span> {reparation.adminComments}
+                    </p>
+                  )}
 
-                  {/* Botones de aprobación/rechazo y estado de aprobación */}
+                  {/* Botones de feedback SOLO si hay presupuesto y no ha respondido */}
                   {reparation.estimatedPrice && !reparation.clientApproval && (
-                    <div className="mt-4 flex gap-4">
-                        <button
-                            onClick={() => handleApproval(reparation.id, 'approved')}
-                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                        >
-                            Aprobar
-                        </button>
-                        <button
-                            onClick={() => handleApproval(reparation.id, 'rejected')}
-                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                        >
-                            Rechazar
-                        </button>
+                    <div className="mt-4">
+                      <textarea
+                        placeholder="Comentario (opcional)"
+                        value={clientComments[reparation.id] || ""}
+                        onChange={e =>
+                          setClientComments((prev) => ({
+                            ...prev,
+                            [reparation.id]: e.target.value
+                          }))
+                        }
+                        className="border p-2 rounded w-full mb-2"
+                      />
+                      <button
+                        className="bg-green-500 text-white px-4 py-2 rounded mr-2"
+                        onClick={() => sendClientApproval(reparation.id, "approved", clientComments[reparation.id])}
+                      >
+                        Aceptar
+                      </button>
+                      <button
+                        className="bg-red-500 text-white px-4 py-2 rounded"
+                        onClick={() => sendClientApproval(reparation.id, "rejected", clientComments[reparation.id])}
+                      >
+                        Rechazar
+                      </button>
                     </div>
                   )}
 
+                  {/* Estado de la respuesta */}
                   {reparation.clientApproval && (
                     <p className={`mt-4 text-sm font-medium ${reparation.clientApproval === 'approved' ? 'text-green-600' : 'text-red-600'}`}>
-                        {reparation.clientApproval === 'approved' ? 'Presupuesto aprobado' : 'Presupuesto rechazado'}
+                      {reparation.clientApproval === 'approved'
+                        ? 'Has aprobado el presupuesto'
+                        : 'Has rechazado el presupuesto'}
                     </p>
                   )}
                 </div>

@@ -26,56 +26,59 @@ const RegisterPage = () => {
     });
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  try {
-    await register(formData);
-    navigate("/");
-    toast.success(`¡Bienvenido, ${formData.email}!`, {
-      style: {
-        background: "linear-gradient(#FFB300, #FFA000)", // Efecto degradado
-        color: "white",
-        borderRadius: "8px",
-        padding: "12px",
-        border: "2px solid #1b5e20",
-        marginTop: "180px",
-      },
-      icon: "✅",
-      duration: 4000,
-    });
-  } catch (error) {
-    setError(error.message);
-    const errorMessage = error.message?.toLowerCase();
-    
-    if (errorMessage.includes("duplicate entry") || errorMessage.includes("user already exists")) {
-      toast.info("Este email ya está registrado. Intenta iniciar sesión.", {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await register(formData);
+      navigate("/");
+      toast.success(`¡Bienvenido, ${formData.email}!`, {
         style: {
-          background: "white", // Efecto degradado
-          color: "black",
-          borderRadius: "8px",
-          padding: "12px",
-          border: "2px solidrgb(255, 255, 255)",
-        },
-        icon: "🚨",
-        duration: 4000,
-      });
-    } else {
-      toast.error(`Error: ${error.message}`, {
-        style: {
-          background: "#d32f2f",
+          background: "linear-gradient(#FFB300, #FFA000)", // Efecto degradado
           color: "white",
           borderRadius: "8px",
           padding: "12px",
+          border: "2px solid #1b5e20",
+          marginTop: "180px",
         },
-        icon: "❌",
+        icon: "✅",
         duration: 4000,
       });
+    } catch (error) {
+      setError(error.message);
+      const errorMessage = error.message?.toLowerCase();
+
+      if (
+        errorMessage.includes("duplicate entry") ||
+        errorMessage.includes("user already exists")
+      ) {
+        toast.info("Este email ya está registrado. Intenta iniciar sesión.", {
+          style: {
+            background: "white", // Efecto degradado
+            color: "black",
+            borderRadius: "8px",
+            padding: "12px",
+            border: "2px solidrgb(255, 255, 255)",
+          },
+          icon: "🚨",
+          duration: 4000,
+        });
+      } else {
+        toast.error(`Error: ${error.message}`, {
+          style: {
+            background: "#d32f2f",
+            color: "white",
+            borderRadius: "8px",
+            padding: "12px",
+          },
+          icon: "❌",
+          duration: 4000,
+        });
+      }
+    } finally {
+      setLoading(false);
     }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="relative w-screen h-screen overflow-hidden">
@@ -91,18 +94,16 @@ const RegisterPage = () => {
       {/* Capa de desenfoque y opacidad */}
       <div className="fixed inset-0 bg-white/5 backdrop-blur-sm z-0" />
 
+      {/* Loader global */}
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center z-20 bg-white/60 backdrop-blur-sm">
+          <PacmanLoader color="#f59e0b" size={25} />
+        </div>
+      )}
+
       {/* Contenido principal */}
       <div className="relative z-10 flex items-center justify-center w-full h-full">
-        <div className="w-full max-w-md p-8 bg-white bg-opacity-90 shadow-2xl rounded-2xl backdrop-blur-md relative">
-          {loading && (
-            <>
-              <div className="absolute inset-0 backdrop-blur-sm z-10 rounded-2xl" />
-              <div className="absolute inset-0 flex items-center justify-center z-20">
-                <PacmanLoader color="amber" size={25} />
-              </div>
-            </>
-          )}
-
+        <div className="w-full max-w-md p-8 bg-white bg-opacity-90 shadow-2xl rounded-2xl backdrop-blur-md">
           {!loading && (
             <>
               <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
@@ -180,7 +181,6 @@ const RegisterPage = () => {
         </div>
       </div>
     </div>
-
   );
 };
 

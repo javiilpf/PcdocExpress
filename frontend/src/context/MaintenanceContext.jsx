@@ -9,7 +9,7 @@ const MaintenanceContext = createContext();
 export const MaintenanceProvider = ({ children }) => {
   const [maintenances, setMaintenances] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [ setError] = useState(null);
   const { token } = useAuth();
 
   // Crear un nuevo mantenimiento
@@ -119,21 +119,41 @@ export const MaintenanceProvider = ({ children }) => {
     }
   };
 
+  const updateMaintenanceState = async (id, state) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${url}/maintenance/${id}/state`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ state }),
+      });
+      if (!response.ok) throw new Error("Error al actualizar el estado");
+      const data = await response.json();
+      setMaintenances((prev) =>
+        prev.map((m) => (m.id === id ? { ...m, state } : m))
+      );
+      return data.data;
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <MaintenanceContext.Provider
-      value={{
-        maintenances,
-        setMaintenances,
-        maintenancesUnasigned,
-        getUserMaintenances,
-        createMaintenance,
-        AsignAdminMaintenance,
-        getAsignedMaintenances,
-        loading,
-        error,
-      }}
-    >
+    <MaintenanceContext.Provider value={{
+      maintenances,
+      getAsignedMaintenances,
+      loading,
+      createMaintenance,
+      AsignAdminMaintenance,
+      getUserMaintenances,
+      maintenancesUnasigned,
+      updateMaintenanceState,
+    }}>
       {children}
     </MaintenanceContext.Provider>
   );

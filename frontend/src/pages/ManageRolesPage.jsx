@@ -1,46 +1,55 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "sonner";
+import { PacmanLoader } from "react-spinners";
 
 const ManageRolesPage = () => {
   const { token } = useAuth();
   const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState("");
   const [newRole, setNewRole] = useState("");
-const url = import.meta.env.VITE_API_URL;
+  const [loading, setLoading] = useState(false);
+  const url = import.meta.env.VITE_API_URL;
 
   // Obtener la lista de usuarios
   useEffect(() => {
     const fetchUsers = async () => {
+      setLoading(true);
       try {
         const response = await fetch(`${url}/users`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("Response:", response);
 
         if (!response.ok) {
           throw new Error("Error al obtener los usuarios");
         }
 
         const data = await response.json();
-        setUsers(data);
-        console.log(data);
+        // Si tu API devuelve { data: [...] }
+        setUsers(data.data || []);
       } catch (err) {
-        console.error(err);
+        toast.error(`Error: ${err}`, {
+          position: "top-right",
+          duration: 3000,
+        });
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchUsers();
-  }, []);
+  }, [token, url]);
 
   // Asignar un nuevo rol al usuario seleccionado
   const handleRoleChange = async () => {
     if (!selectedUser || !newRole) {
-      alert("Selecciona un usuario y un rol");
+      toast.info("Por favor, selecciona un usuario y un rol");
       return;
     }
 
+    setLoading(true);
     try {
       const response = await fetch(`${url}/users/${selectedUser}/role`, {
         method: "PUT",
@@ -55,16 +64,41 @@ const url = import.meta.env.VITE_API_URL;
         throw new Error("Error al actualizar el rol del usuario");
       }
 
-      alert("Rol actualizado correctamente");
-      setSelectedUser(null);
+      toast.success("Rol actualizado correctamente", {
+        position: "top-right",
+        duration: 3000,
+        style: {
+          background: "#4CAF50",
+          color: "#fff",
+          marginTop: "180px",
+        },
+      });
+      setSelectedUser("");
       setNewRole("");
     } catch (err) {
-      alert(err.message);
+      toast.error(`Error: ${err.message}`, {
+        position: "top-right",
+        duration: 3000,
+        style: {
+          background: "#f44336",
+          color: "#fff",
+          marginTop: "180px",
+        },
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 pt-50">
+    <div className="container mx-auto px-4 py-8 pt-50 relative">
+      {/* Loader global */}
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center z-20 bg-white/60 backdrop-blur-sm rounded-lg">
+          <PacmanLoader color="#f59e0b" size={25} />
+        </div>
+      )}
+
       <h1 className="text-2xl font-bold mb-4">Gestión de Roles</h1>
       <div className="mb-4">
         <label htmlFor="user" className="block font-medium mb-2">
@@ -73,13 +107,14 @@ const url = import.meta.env.VITE_API_URL;
         <select
           id="user"
           className="w-full p-2 border rounded"
-          value={selectedUser || ""}
+          value={selectedUser}
           onChange={(e) => setSelectedUser(e.target.value)}
+          disabled={loading}
         >
           <option value="">Selecciona un usuario</option>
           {users.map((user) => (
             <option key={user.id} value={user.id}>
-              {user.email} ({user.roles.join(", ")})
+              {user.email} ({user.roles?.join(", ")})
             </option>
           ))}
         </select>
@@ -94,6 +129,7 @@ const url = import.meta.env.VITE_API_URL;
           className="w-full p-2 border rounded"
           value={newRole}
           onChange={(e) => setNewRole(e.target.value)}
+          disabled={loading}
         >
           <option value="">Selecciona un rol</option>
           <option value="ROLE_USER">Cliente</option>
@@ -105,6 +141,7 @@ const url = import.meta.env.VITE_API_URL;
       <button
         onClick={handleRoleChange}
         className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600"
+        disabled={loading}
       >
         Actualizar Rol
       </button>

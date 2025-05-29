@@ -273,4 +273,18 @@ class MaintenanceApiController extends AbstractController
         }
     }
     
+    #[Route('/{id}/state', name: 'maintenance_update_state', methods: ['PATCH'])]
+    public function updateState(int $id, Request $request): JsonResponse
+    {
+        $maintenance = $this->entityManager->getRepository(Maintenance::class)->find($id);
+        if (!$maintenance) {
+            return $this->json(['error' => 'Mantenimiento no encontrado'], 404);
+        }
+        $data = json_decode($request->getContent(), true);
+        $maintenance->setState($data['state']);
+        $this->entityManager->flush();
+        return $this->json(['status' => 'success', 'data' => $maintenance], 200, [], [
+            'groups' => ['maintenance:details']
+        ]);
+    }
 }

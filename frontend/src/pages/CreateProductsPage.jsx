@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useProducts } from "../context/ProductContext";
-
+import { toast } from "sonner"; 
 const CreateProductsPage = () => {
   const { createProduct, loading, error } = useProducts();
   const [formData, setFormData] = useState({
@@ -29,7 +29,18 @@ const CreateProductsPage = () => {
     images.forEach((img) => data.append("images[]", img));
     try {
       await createProduct(data);
-      alert("Producto creado exitosamente");
+      toast.success("Producto creado con éxito", {
+        style: {
+          background: "linear-gradient(#FFB300, #FFA000)", 
+          color: "white",
+          borderRadius: "8px",
+          padding: "12px",
+          border: "2px solid #1b5e20",
+          marginTop: "180px",
+        },
+        icon: "✅",
+        duration: 4000,
+      });
       setFormData({
         product_name: "",
         description: "",
@@ -40,7 +51,18 @@ const CreateProductsPage = () => {
       });
       setImages([]);
     } catch (err) {
-      alert("Error al crear el producto: " + err.message);
+      toast.error("Error al crear el producto: " + err.message, {
+        style: {
+          background: "linear-gradient(#FFB300, #FFA000)", // Efecto degradado
+          color: "white",
+          borderRadius: "8px",
+          padding: "12px",
+          border: "2px solid #1b5e20",
+          marginTop: "180px",
+        },
+        icon: "🚨",
+        duration: 4000,
+      });
     }
   };
 

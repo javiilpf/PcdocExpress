@@ -74,15 +74,16 @@ const LoginPage = () => {
       {/* Capa de desenfoque y opacidad */}
       <div className="fixed inset-0 bg-white/5 backdrop-blur-sm z-0" />
 
+      {/* Loader global */}
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center z-20 bg-white/60 backdrop-blur-sm">
+          <PacmanLoader color="#f59e0b" size={25} />
+        </div>
+      )}
+
       {/* Contenido principal */}
       <div className="relative z-10 flex items-center justify-center w-full h-full">
         <div className="w-full max-w-md p-8 bg-white bg-opacity-90 shadow-2xl rounded-2xl backdrop-blur-md">
-          {loading && (
-            <div className="absolute inset-0 flex items-center justify-center rounded-2xl z-10">
-              <PacmanLoader color="amber" size={25} />
-            </div>
-          )}
-
           {!loading && (
             <>
               <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
@@ -159,7 +160,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
-
-
-

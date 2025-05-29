@@ -90,7 +90,7 @@ const CartPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex justify-center items-center">
+      <div className="fixed left-0 right-0 top-[170px] bottom-0 flex items-center justify-center z-50 bg-white/15 backdrop-blur-sm">
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-amber-500"></div>
       </div>
     );
@@ -175,7 +175,19 @@ const CartPage = () => {
             </h2>
             <button
               className="mt-4 bg-amber-500 text-white px-6 py-2 rounded-lg hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500"
-              onClick={() => alert("¡Gracias por tu compra!")}
+              toasttype="button"
+              onClick={() => toast.success("Pago realizado con éxito", {
+                style: {
+                  background: "linear-gradient(135deg, #f59e0b, #d97706)", // Efecto degradado
+                  color: "white",
+                  borderRadius: "8px",
+                  padding: "12px",
+                  border: "2px solid #b45309",
+                  marginTop: "180px",
+                },
+                icon: "💳",
+                duration: 4000,
+              })} // Simulación de pago exitoso
             >
               Pagar
             </button>

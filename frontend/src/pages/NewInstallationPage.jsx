@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useProducts } from "../context/ProductContext";
 import { useInstallation } from "../context/InstallationContext";
+import { toast } from "sonner";
 
 const NewInstallationPage = () => {
   const { products, getProducts, loading } = useProducts();
@@ -44,7 +45,18 @@ const NewInstallationPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!selectedProduct) {
-      alert("Por favor, selecciona un producto para instalar.");
+      toast.error("Por favor, selecciona un producto para instalar.", {
+        style: {
+          background: "linear-gradient(135deg, #FFB300, #FFA000)", // Efecto degradado
+          color: "white",
+          borderRadius: "8px",
+          padding: "12px",
+          border: "2px solid #1b5e20",
+          marginTop: "180px",
+        },
+        icon: "❌",
+        duration: 4000,
+      });
       return;
     }
     const formData = {
@@ -53,7 +65,7 @@ const NewInstallationPage = () => {
       processor: installationDetails.processor,
       ram: installationDetails.ram,
       storage: installationDetails.storage,
-      // NO enviar idClient
+      
     };
     createInstallation(formData);
   };

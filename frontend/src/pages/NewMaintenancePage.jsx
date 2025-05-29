@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import { useNavigate } from "react-router-dom";
 import { PacmanLoader } from "react-spinners";
 import { useMaintenance } from "../context/MaintenanceContext";
@@ -15,10 +14,9 @@ const NewMaintenancePage = () => {
   });
   const { createMaintenance } = useMaintenance();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false); // Inicializa estado para el loader.
-  const [error, setErrorMessage] = useState(""); // Estado para los mensajes de error.
+  const [loading, setLoading] = useState(false);
+  const [error, setErrorMessage] = useState("");
 
-  // Manejar el cambio en los inputs
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -26,53 +24,64 @@ const NewMaintenancePage = () => {
     });
   };
 
-  // Validar el formulario antes de enviarlo
   const validateForm = () => {
     const { deviceType, model, processor, ram, storage } = formData;
     if (!deviceType || !model || !processor || !ram || !storage) {
       setErrorMessage("Todos los campos son obligatorios.");
       return false;
     }
-    setErrorMessage(""); // Limpia cualquier error previo.
+    setErrorMessage("");
     return true;
   };
 
-  // Manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    setLoading(true); 
+    setLoading(true);
     try {
-      await createMaintenance(formData); 
-      navigate("/"); 
+      await createMaintenance(formData);
+      navigate("/");
     } catch (error) {
       console.log(error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   return (
-    <div className="relative max-w-md w-full mx-auto p-6 bg-white shadow-lg rounded-lg pt-45">
+    <div className="relative min-h-screen w-full pt-20 overflow-hidden">
+      {/* Imagen de fondo difuminada */}
+      <div
+        className="fixed inset-0 w-full h-full bg-cover bg-center z-0"
+        style={{
+          backgroundImage: "url('/images/formulatioInstalacion.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      />
+      {/* Capa de desenfoque y opacidad */}
+      <div className="fixed inset-0 bg-white/30 backdrop-blur-sm z-0" />
+
+      {/* Loader */}
       {loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 rounded-lg z-10">
-          <PacmanLoader color="#3a6bca" size={25} />
+        <div className="absolute inset-0 flex items-center justify-center z-20 bg-white/60 backdrop-blur-sm">
+          <PacmanLoader color="#f59e0b" size={25} />
         </div>
       )}
 
-      {!loading && (
-        <div className="min-h-screen flex justify-center items-center bg-gray-100">
-          <div className="w-full max-w-lg bg-white p-6 rounded-lg shadow-md">
-            <h1 className="text-2xl font-bold text-center mb-6">
-              Formulario de Mantenimiento
-            </h1>
+      {/* Contenido principal */}
+      <div className="relative z-10 flex justify-center items-center min-h-screen pt-5 px-4">
+        <div className="w-full max-w-4xl bg-white p-6 rounded-lg shadow-md">
+          <h1 className="text-2xl font-bold text-center mb-6">
+            Formulario de Mantenimiento
+          </h1>
 
-            {/* Mensaje de error */}
-            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Tipo de dispositivo */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Campos en 2 columnas en pantallas grandes */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="deviceType" className="block font-medium mb-1">
                   Tipo de Dispositivo
@@ -80,7 +89,7 @@ const NewMaintenancePage = () => {
                 <select
                   name="deviceType"
                   id="deviceType"
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   onChange={handleChange}
                   defaultValue=""
                 >
@@ -93,7 +102,6 @@ const NewMaintenancePage = () => {
                 </select>
               </div>
 
-              {/* Modelo del dispositivo */}
               <div>
                 <label htmlFor="model" className="block font-medium mb-1">
                   Modelo del Dispositivo
@@ -103,12 +111,11 @@ const NewMaintenancePage = () => {
                   name="model"
                   id="model"
                   onChange={handleChange}
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   placeholder="Introduce el modelo"
                 />
               </div>
 
-              {/* Procesador */}
               <div>
                 <label htmlFor="processor" className="block font-medium mb-1">
                   Procesador
@@ -118,12 +125,11 @@ const NewMaintenancePage = () => {
                   name="processor"
                   id="processor"
                   onChange={handleChange}
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   placeholder="Ejemplo: Intel Core i7"
                 />
               </div>
 
-              {/* RAM */}
               <div>
                 <label htmlFor="ram" className="block font-medium mb-1">
                   RAM
@@ -133,12 +139,11 @@ const NewMaintenancePage = () => {
                   name="ram"
                   id="ram"
                   onChange={handleChange}
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   placeholder="Ejemplo: 16 GB"
                 />
               </div>
 
-              {/* Almacenamiento Actual */}
               <div>
                 <label htmlFor="storage" className="block font-medium mb-1">
                   Almacenamiento Actual
@@ -148,45 +153,40 @@ const NewMaintenancePage = () => {
                   name="storage"
                   id="storage"
                   onChange={handleChange}
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   placeholder="Ejemplo: 512 GB SSD"
                 />
               </div>
 
-              {/* Especificaciones del Mantenimiento */}
-              <div>
-                <label
-                  htmlFor="maintenanceSpecs"
-                  className="block font-medium mb-1"
-                >
+              <div className="md:col-span-2">
+                <label htmlFor="specifications" className="block font-medium mb-1">
                   Especificaciones del Mantenimiento
                 </label>
                 <textarea
                   name="specifications"
                   id="specifications"
                   onChange={handleChange}
-                  className="w-full p-3 border rounded-md focus:ring focus:ring-blue-300"
+                  className="w-full p-3 border rounded-md focus:ring focus:ring-amber-300"
                   rows="3"
                   placeholder="Describe las especificaciones del mantenimiento"
                 />
               </div>
+            </div>
 
-              {/* Botón Enviar */}
-              <div className="text-center">
-                <button
-                  type="submit"
-                  className="w-full bg-amber-500 text-white font-semibold py-3 rounded-md hover:bg-amber-600 transition duration-300"
-                >
-                  Enviar
-                </button>
-              </div>
-            </form>
-          </div>
+            {/* Botón Enviar */}
+            <button
+              type="submit"
+              className="w-full bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-700 transition-colors"
+            >
+              Enviar
+            </button>
+          </form>
         </div>
-      )}
+      </div>
     </div>
   );
 };
 
 export default NewMaintenancePage;
+
 

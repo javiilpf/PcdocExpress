@@ -4,6 +4,7 @@ import { useProducts } from "../context/ProductContext";
 import { useCart } from "../context/CartContext"; // Importar el contexto del carrito
 import { Carousel } from "react-responsive-carousel";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "sonner"; // Importar la librería de notificaciones
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -16,16 +17,46 @@ const ProductDetailPage = () => {
 
   const handleAddToCart = async () => {
     if (!user) {
-      alert("Debes iniciar sesión para añadir productos al carrito.");
+      toast.info("Debes iniciar sesión para añadir productos al carrito.",{
+        style: {
+          background: "linear-gradient(135deg, #FFB300, #FFA000)", // Efecto degradado
+          color: "white",
+          borderRadius: "8px",
+          padding: "12px",
+          border: "2px solidrgb(23, 25, 23)",
+          marginTop: "180px",
+        },
+        icon: "🛒",
+        duration: 4000,
+      });
       return;
     }
 
     try {
       await addToCart(user.id, product.id, quantity); // Añadir la cantidad seleccionada al carrito
-      alert("Producto añadido al carrito");
+      toast.success(`Producto ${product.productName} añadido al carrito`, {
+        style: {
+          background: "linear-gradient(135deg, #FFB300, #FFA000)", // Efecto degradado
+          color: "white",
+          borderRadius: "8px",
+          padding: "12px",
+          border: "2px solid #1b5e20",
+          marginTop: "165px",
+        },
+        icon: "🛒",
+        duration: 4000,
+      });
     } catch (err) {
       console.error("Error al añadir al carrito:", err);
-      alert("Hubo un error al añadir el producto al carrito.");
+      toast.error(`Hubo un error al añadir el producto al carrito`, {
+        style: {
+          background: "red",
+          color: "white",
+          border: "1px solid black",
+          marginTop: "180px",
+        },
+        icon: "❌",
+      });
     }
   };
 
