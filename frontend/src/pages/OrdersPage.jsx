@@ -1,13 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useMaintenance } from "../context/MaintenanceContext";
 import { useReparation } from "../context/ReparationContext";
-import { useInstallation } from "../context/InstallationContext"; // Importar el contexto de instalaciones
+import { useInstallation } from "../context/InstallationContext";
 
 const OrdersPage = () => {
   const { maintenances, getUserMaintenances } = useMaintenance();
   const { Reparations, getUserReparations, approveReparation } = useReparation();
-  const { installations, getUserInstallations} = useInstallation(); // Obtener instalaciones
+  const { installations, sendClientApproval,getUserInstallations, payInstallation } = useInstallation();
+  const [clientComments, setClientComments] = useState({});
 
   const { user } = useAuth();
 
@@ -189,23 +190,8 @@ const OrdersPage = () => {
                 key={installation.id}
                 className="p-4 border rounded-lg shadow-md bg-gray-50 hover:shadow-lg transition-shadow duration-300"
               >
-                {/* Imagen del producto si existe */}
-                {installation.product && installation.product.images && installation.product.images.length > 0 ? (
-                  <img
-                    src={`${import.meta.env.VITE_API_URL.replace('/api', '')}${installation.product.images[0].urlImage}`}
-                    alt={installation.product.productName || "Producto"}
-                    className="w-20 h-20 object-cover mb-2 rounded"
-                  />
-                ) : (
-                  <img
-                    src="/images/no-image.png"
-                    alt="Sin imagen"
-                    className="w-20 h-20 object-cover mb-2 rounded"
-                  />
-                )}
-
                 <p className="text-lg font-semibold text-gray-800">
-                  Modelo: {installation.model}
+                  <span className="font-medium">Modelo:</span> {installation.model}
                 </p>
                 <p className="text-sm text-gray-600">
                   <span className="font-medium">Procesador:</span> {installation.processor}
@@ -219,6 +205,68 @@ const OrdersPage = () => {
                 <p className="text-sm text-gray-600">
                   <span className="font-medium">Estado:</span> {installation.state}
                 </p>
+
+                {/* Feedback del administrador */}
+                {installation.estimatedPrice && (
+                  <div className="mt-3 p-3 bg-amber-50 rounded">
+                    <p className="text-base text-amber-700 font-semibold">
+                      Presupuesto propuesto: {installation.estimatedPrice} €
+                    </p>
+                    {installation.adminComments && (
+                      <p className="text-sm text-gray-700 mt-1">
+                        <span className="font-medium">Comentario del técnico:</span> {installation.adminComments}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* Botones aceptar/rechazar SOLO si está pendiente y no ha respondido */}
+                {installation.estimatedPrice && installation.state === "pendiente" && installation.clientApproval === null && (
+                  <div className="mt-4">
+                    <textarea
+                      placeholder="Comentario (opcional)"
+                      value={clientComments[installation.id] || ""}
+                      onChange={e =>
+                        setClientComments((prev) => ({
+                          ...prev,
+                          [installation.id]: e.target.value
+                        }))
+                      }
+                      className="border p-2 rounded w-full mb-2"
+                    />
+                    <button
+                      className="bg-green-500 text-white px-4 py-2 rounded mr-2"
+                      onClick={() => sendClientApproval(installation.id, "approved", clientComments[installation.id])}
+                    >
+                      Aceptar
+                    </button>
+                    <button
+                      className="bg-red-500 text-white px-4 py-2 rounded"
+                      onClick={() => sendClientApproval(installation.id, "rejected", clientComments[installation.id])}
+                    >
+                      Rechazar
+                    </button>
+                  </div>
+                )}
+
+                {/* Mensaje si ya ha respondido */}
+                {installation.clientApproval && (
+                  <p className={`mt-4 text-sm font-medium ${installation.clientApproval === 'approved' ? 'text-green-600' : 'text-red-600'}`}>
+                    {installation.clientApproval === 'approved'
+                      ? 'Has aprobado el presupuesto'
+                      : 'Has rechazado el presupuesto'}
+                  </p>
+                )}
+
+                {/* Botón de pago si está completado */}
+                {installation.state === "completado" && (
+                  <button
+                    className="bg-amber-600 text-white px-4 py-2 rounded mt-2"
+                    onClick={() => payInstallation(installation.id)}
+                  >
+                    Pagar {installation.finalPrice || installation.estimatedPrice} €
+                  </button>
+                )}
               </div>
             ))}
           </div>

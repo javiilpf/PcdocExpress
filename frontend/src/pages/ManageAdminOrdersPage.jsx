@@ -5,13 +5,14 @@ import { useReparation } from "../context/ReparationContext";
 
 const ManageAdminOrdersPage = () => {
   const { maintenances, getAsignedMaintenances, loading: maintenanceLoading } = useMaintenance();
-  const { installations, getAssignedInstallations, loading: installationLoading } = useInstallation();
+  const { installations, sendAdminFeedback, completeInstallation,getAssignedInstallations, loading: installationLoading } = useInstallation();
   const { AdminReparations, getAsignedReparations, loading: reparationLoading, updateReparation } = useReparation();
 
   const userId = JSON.parse(localStorage.getItem("user"))?.id;
 
   // Estado para manejar los valores de cada reparación
   const [reparationStates, setReparationStates] = useState({});
+  const [feedback, setFeedback] = useState({});
 
   useEffect(() => {
     if (userId) {
@@ -175,13 +176,117 @@ const ManageAdminOrdersPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {installations.map((installation) => (
               <div key={installation.id} className="p-6 bg-white shadow-lg rounded-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">{installation.productName}</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Modelo: {installation.model}
+                </h3>
                 <p className="text-sm text-gray-600 mb-1">
-                  <span className="font-medium">Descripción:</span> {installation.description}
+                  <span className="font-medium">Procesador:</span> {installation.processor}
                 </p>
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Fecha:</span> {new Date(installation.date).toLocaleDateString()}
+                <p className="text-sm text-gray-600 mb-1">
+                  <span className="font-medium">RAM:</span> {installation.ram}
                 </p>
+                <p className="text-sm text-gray-600 mb-1">
+                  <span className="font-medium">Almacenamiento:</span> {installation.storage}
+                </p>
+                <p className="text-sm text-gray-600 mb-1">
+                  <span className="font-medium">Cliente:</span> {installation.idClient?.email}
+                </p>
+                <p className="text-sm text-gray-600 mb-1">
+                  <span className="font-medium">Estado:</span> {installation.state}
+                </p>
+
+                {/* Si está pendiente y no tiene presupuesto */}
+                {installation.state === "pendiente" && installation.estimatedPrice === null && (
+                  <form
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      await sendAdminFeedback(
+                        installation.id,
+                        feedback[installation.id]?.estimatedPrice,
+                        feedback[installation.id]?.adminComments
+                      );
+                      setFeedback((prev) => ({ ...prev, [installation.id]: { estimatedPrice: "", adminComments: "" } }));
+                    }}
+                  >
+                    <input
+                      type="number"
+                      placeholder="Presupuesto (€)"
+                      value={feedback[installation.id]?.estimatedPrice || ""}
+                      onChange={e =>
+                        setFeedback((prev) => ({
+                          ...prev,
+                          [installation.id]: { ...prev[installation.id], estimatedPrice: e.target.value }
+                        }))
+                      }
+                      className="border p-2 rounded w-full mb-2"
+                      required
+                    />
+                    <textarea
+                      placeholder="Comentario para el cliente"
+                      value={feedback[installation.id]?.adminComments || ""}
+                      onChange={e =>
+                        setFeedback((prev) => ({
+                          ...prev,
+                          [installation.id]: { ...prev[installation.id], adminComments: e.target.value }
+                        }))
+                      }
+                      className="border p-2 rounded w-full mb-2"
+                      required
+                    />
+                    <button className="bg-green-600 text-white px-4 py-2 rounded">Enviar presupuesto</button>
+                  </form>
+                )}
+
+                {/* Si el cliente ha aceptado y está en proceso, mostrar botón para completar */}
+                {installation.state === "en_proceso" && (
+                  <>
+                    <div className="mb-2">
+                      <p className="text-green-700 font-semibold">
+                        Presupuesto aceptado: {installation.estimatedPrice} €
+                      </p>
+                      <p className="text-gray-700">
+                        <span className="font-medium">Comentario admin:</span> {installation.adminComments}
+                      </p>
+                      <p className="text-gray-700">
+                        <span className="font-medium">Comentario cliente:</span> {installation.clientComments}
+                      </p>
+                    </div>
+                    <button
+                      className="bg-blue-600 text-white px-4 py-2 rounded mt-2"
+                      onClick={() => completeInstallation(installation.id)}
+                    >
+                      Marcar como completada
+                    </button>
+                  </>
+                )}
+
+                {/* Si el cliente ha rechazado, puedes mostrar el comentario y volver a proponer */}
+                {installation.clientApproval === "rejected" && (
+                  <div className="mt-2 text-red-600">
+                    El cliente ha rechazado el presupuesto: {installation.clientComments}
+                  </div>
+                )}
+
+                {/* Si ya hay feedback, muéstralo */}
+                {installation.estimatedPrice !== null && (
+                  <div className="mt-3 p-3 bg-amber-50 rounded">
+                    <p className="text-base text-amber-700 font-semibold">
+                      Presupuesto propuesto: {installation.estimatedPrice} €
+                    </p>
+                    {installation.adminComments && (
+                      <p className="text-sm text-gray-700 mt-1">
+                        <span className="font-medium">Comentario del técnico:</span> {installation.adminComments}
+                      </p>
+                    )}
+                    {installation.clientApproval && (
+                      <p className={`mt-2 text-sm font-medium ${installation.clientApproval === "approved" ? "text-green-600" : "text-red-600"}`}>
+                        {installation.clientApproval === "approved"
+                          ? "Presupuesto aprobado por el cliente"
+                          : "Presupuesto rechazado por el cliente"}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>

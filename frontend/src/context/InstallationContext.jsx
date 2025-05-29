@@ -155,6 +155,100 @@ export const InstallationProvider = ({ children }) => {
     }
   };
 
+  // Admin: proponer presupuesto y comentario
+  const sendAdminFeedback = async (id, estimatedPrice, adminComments) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/installation/${id}/feedback`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ estimatedPrice, adminComments }),
+      });
+      if (!response.ok) throw new Error("Error al enviar feedback");
+      const data = await response.json();
+      // Actualiza la instalación en el estado
+      setInstallations((prev) =>
+        prev.map((inst) => (inst.id === id ? data.data : inst))
+      );
+      return data.data;
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Cliente: aceptar/rechazar presupuesto
+  const sendClientApproval = async (id, clientApproval, clientComments) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/installation/${id}/client-approval`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ clientApproval, clientComments }),
+      });
+      if (!response.ok) throw new Error("Error al enviar respuesta");
+      const data = await response.json();
+      setInstallations((prev) =>
+        prev.map((inst) => (inst.id === id ? data.data : inst))
+      );
+      return data.data;
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Admin: marcar como completada
+  const completeInstallation = async (id) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/installation/${id}/complete`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) throw new Error("Error al completar instalación");
+      const data = await response.json();
+      setInstallations((prev) =>
+        prev.map((inst) => (inst.id === id ? data.data : inst))
+      );
+      return data.data;
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Cliente: pagar instalación
+  const payInstallation = async (id) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/installation/${id}/pay`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) throw new Error("Error al pagar instalación");
+      // Opcional: puedes actualizar el estado local si backend devuelve la instalación
+      return true;
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <InstallationContext.Provider
       value={{
@@ -164,10 +258,14 @@ export const InstallationProvider = ({ children }) => {
         error,
         searchProducts,
         createInstallation,
-        getUserInstallations, // Añadido aquí
+        getUserInstallations,
         InstallationsUnasigned,
         AsignAdminInstallation,
         getAssignedInstallations,
+        sendAdminFeedback,
+        sendClientApproval,
+        completeInstallation,
+        payInstallation,
       }}
     >
       {children}

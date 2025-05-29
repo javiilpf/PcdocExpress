@@ -449,4 +449,60 @@ class ReparationApiController extends AbstractController
             ], 500);
         }
     }
+
+    #[Route('/{id}/feedback', name: 'admin_feedback', methods: ['PATCH'])]
+    public function adminFeedback(int $id, Request $request): JsonResponse
+    {
+        $reparation = $this->entityManager->getRepository(Reparation::class)->find($id);
+        if (!$reparation) {
+            return $this->json(['error' => 'Reparación no encontrada'], 404);
+        }
+        /** @var User $admin */
+        $admin = $this->getUser();
+        if (!$admin || !in_array('ROLE_EMPLOYER', $admin->getRoles())) {
+            return $this->json(['error' => 'Usuario no autorizado'], 403);
+        }
+        $data = json_decode($request->getContent(), true);
+        $reparation->setEstimatedPrice($data['estimatedPrice']);
+        $reparation->setAdminComments($data['adminComments']);
+        $reparation->setClientApproval(null);
+        $reparation->setClientComments(null);
+        $this->entityManager->flush();
+        return $this->json(['status' => 'success', 'data' => $reparation], 200, [], [
+            AbstractNormalizer::GROUPS => ['reparation:details']
+        ]);
+    }
+
+    #[Route('/{id}/client-approval', name: 'client_approval', methods: ['PATCH'])]
+    public function clientApproval(int $id, Request $request): JsonResponse
+    {
+        $reparation = $this->entityManager->getRepository(Reparation::class)->find($id);
+        if (!$reparation) {
+            return $this->json(['error' => 'Reparación no encontrada'], 404);
+        }
+        $data = json_decode($request->getContent(), true);
+        $reparation->setClientApproval($data['clientApproval']);
+        $reparation->setClientComments($data['clientComments'] ?? null);
+        if ($data['clientApproval'] === "approved") {
+            $reparation->setState(2); // o el valor que uses para "en_proceso"
+        }
+        $this->entityManager->flush();
+        return $this->json(['status' => 'success', 'data' => $reparation], 200, [], [
+            AbstractNormalizer::GROUPS => ['reparation:details']
+        ]);
+    }
+
+    #[Route('/{id}/complete', name: 'reparation_complete', methods: ['PATCH'])]
+    public function completeReparation(int $id): JsonResponse
+    {
+        $reparation = $this->entityManager->getRepository(Reparation::class)->find($id);
+        if (!$reparation) {
+            return $this->json(['error' => 'Reparación no encontrada'], 404);
+        }
+        $reparation->setState(3); // o el valor que uses para "completado"
+        $this->entityManager->flush();
+        return $this->json(['status' => 'success', 'data' => $reparation], 200, [], [
+            AbstractNormalizer::GROUPS => ['reparation:details']
+        ]);
+    }
 }

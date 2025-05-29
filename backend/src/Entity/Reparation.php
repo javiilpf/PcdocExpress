@@ -78,6 +78,18 @@ class Reparation
     #[Groups(['reparation:details'])]
     private ?string $clientApproval = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['reparation:details'])]
+    private ?string $adminComments = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['reparation:details'])]
+    private ?string $clientComments = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    #[Groups(['reparation:details'])]
+    private ?float $finalPrice = null;
+
     public function __construct()
     {
         $this->opinions = new ArrayCollection();
@@ -294,6 +306,42 @@ class Reparation
     public function setClientApproval(?string $clientApproval): static
     {
         $this->clientApproval = $clientApproval;
+
+        return $this;
+    }
+
+    public function getAdminComments(): ?string
+    {
+        return $this->adminComments;
+    }
+
+    public function setAdminComments(?string $adminComments): static
+    {
+        $this->adminComments = $adminComments;
+
+        return $this;
+    }
+
+    public function getClientComments(): ?string
+    {
+        return $this->clientComments;
+    }
+
+    public function setClientComments(?string $clientComments): static
+    {
+        $this->clientComments = $clientComments;
+
+        return $this;
+    }
+
+    public function getFinalPrice(): ?float
+    {
+        return $this->finalPrice;
+    }
+
+    public function setFinalPrice(?float $finalPrice): static
+    {
+        $this->finalPrice = $finalPrice;
 
         return $this;
     }

@@ -56,7 +56,11 @@ class InstallationApiController extends AbstractController
                     'ram',
                     'storage',
                     'installation_Date',
-                    'state'
+                    'state',
+                    'estimatedPrice',
+                    'adminComments',
+                    'clientApproval',
+                    'clientComments'
                 ]
             ]);
         } catch (\Exception $e) {
@@ -157,11 +161,11 @@ class InstallationApiController extends AbstractController
 
             /** @var User $administrator */
             $administrator = $this->getUser();
-            if (!$administrator || !in_array('ROLE_ADMIN', $administrator->getRoles())) {
+            if (!$administrator || !in_array('ROLE_EMPLOYER', $administrator->getRoles())) {
                 return $this->json(['error' => 'Usuario no autorizado'], 403);
             }
 
-            $installation->setIdClient($administrator);
+            $installation->setIdAdministrator($administrator); // <-- Esto es lo correcto
             $this->entityManager->flush();
 
             return $this->json([
@@ -192,40 +196,34 @@ class InstallationApiController extends AbstractController
         }
     }
 
+    // PATCH /api/installation/assigned/{id}
     #[Route('/assigned/{id}', name: 'show_employee_installations', methods: ['GET'])]
     public function showEmployeeInstallations(int $id): JsonResponse
     {
         try {
-            // Verificar si el usuario está autenticado
             /** @var User $user */
             $user = $this->getUser();
             if (!$user) {
                 return $this->json(['error' => 'Usuario no autenticado'], 401);
             }
 
-            // Buscar al empleado por el ID proporcionado
             $employee = $this->entityManager->getRepository(User::class)->find($id);
             if (!$employee) {
                 return $this->json(['error' => 'Empleado no encontrado'], 404);
             }
 
-            // Verificar que el usuario autenticado tenga permisos para ver las instalaciones
-            if (!in_array('ROLE_ADMIN', $user->getRoles()) && $user->getId() !== $employee->getId()) {
+            if (
+                !in_array('ROLE_ADMIN', $user->getRoles()) &&
+                !in_array('ROLE_EMPLOYER', $user->getRoles()) &&
+                $user->getId() !== $employee->getId()
+            ) {
                 return $this->json(['error' => 'No tienes permisos para ver estas instalaciones'], 403);
             }
 
-            // Obtener las instalaciones asignadas al empleado
+            // CORRECTO: buscar por idAdministrator
             $installations = $this->entityManager
                 ->getRepository(Installation::class)
-                ->findBy(['idClient' => $employee]);
-
-            if (empty($installations)) {
-                return $this->json([
-                    'status' => 'success',
-                    'message' => 'No hay instalaciones asignadas a este empleado.',
-                    'data' => []
-                ], 200);
-            }
+                ->findBy(['idAdministrator' => $employee]);
 
             return $this->json([
                 'status' => 'success',
@@ -243,7 +241,11 @@ class InstallationApiController extends AbstractController
                     'storage',
                     'installation_Date',
                     'state',
-                    'idClient' => ['id', 'email']
+                    'idClient' => ['id', 'email'],
+                    'estimatedPrice',
+                    'adminComments',
+                    'clientApproval',
+                    'clientComments'
                 ]
             ]);
         } catch (\Exception $e) {
@@ -252,5 +254,82 @@ class InstallationApiController extends AbstractController
                 'message' => 'Ocurrió un error al procesar la solicitud.'
             ], 500);
         }
+    }
+
+    // PATCH /api/installation/{id}/feedback
+    #[Route('/{id}/feedback', name: 'admin_feedback', methods: ['PATCH'])]
+    public function adminFeedback(int $id, Request $request): JsonResponse
+    {
+        try {
+            $installation = $this->entityManager->getRepository(Installation::class)->find($id);
+            if (!$installation) {
+                return $this->json(['error' => 'Instalación no encontrada'], 404);
+            }
+
+            /** @var User $administrator */
+            $administrator = $this->getUser();
+            if (!$administrator || !in_array('ROLE_EMPLOYER', $administrator->getRoles())) {
+                return $this->json(['error' => 'Usuario no autorizado'], 403);
+            }
+
+            $data = json_decode($request->getContent(), true);
+            $installation->setEstimatedPrice($data['estimatedPrice']);
+            $installation->setAdminComments($data['adminComments']);
+            $installation->setClientApproval(null); // Resetear aprobación
+            $installation->setClientComments(null);
+            $this->entityManager->flush();
+
+            return $this->json(['status' => 'success', 'data' => $installation], 200, [], ['groups' => ['installation:read']]);
+        } catch (\Exception $e) {
+            return $this->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // PATCH /api/installation/{id}/client-approval
+    #[Route('/{id}/client-approval', name: 'client_approval', methods: ['PATCH'])]
+    public function clientApproval(int $id, Request $request): JsonResponse
+    {
+        $installation = $this->entityManager->getRepository(Installation::class)->find($id);
+        if (!$installation) {
+            return $this->json(['error' => 'Instalación no encontrada'], 404);
+        }
+        $data = json_decode($request->getContent(), true);
+        $installation->setClientApproval($data['clientApproval']); // "approved" o "rejected"
+        $installation->setClientComments($data['clientComments'] ?? null);
+        if ($data['clientApproval'] === "approved") {
+            $installation->setState("en_proceso");
+        }
+        $this->entityManager->flush();
+        return $this->json(['status' => 'success', 'data' => $installation], 200, [], ['groups' => ['installation:read']]);
+    }
+
+    // PATCH /api/installation/{id}/pay
+    #[Route('/{id}/pay', name: 'pay', methods: ['PATCH'])]
+    public function payInstallation(int $id): JsonResponse
+    {
+        $installation = $this->entityManager->getRepository(Installation::class)->find($id);
+        if (!$installation) {
+            return $this->json(['error' => 'Instalación no encontrada'], 404);
+        }
+        // Aquí podrías marcar como pagada, o guardar un registro de pago
+        // Por ejemplo, $installation->setPaid(true);
+        $this->entityManager->flush();
+        return $this->json(['status' => 'success', 'message' => 'Pago realizado correctamente'], 200);
+    }
+
+    // PATCH /api/installation/{id}/complete
+    #[Route('/{id}/complete', name: 'installation_complete', methods: ['PATCH'])]
+    public function completeInstallation(int $id): JsonResponse
+    {
+        $installation = $this->entityManager->getRepository(Installation::class)->find($id);
+        if (!$installation) {
+            return $this->json(['error' => 'Instalación no encontrada'], 404);
+        }
+        $installation->setState("completado");
+        $this->entityManager->flush();
+        return $this->json(['status' => 'success', 'data' => $installation], 200, [], ['groups' => ['installation:read']]);
     }
 }

@@ -22,7 +22,6 @@ const ManageOrdersPage = () => {
     installations,
     InstallationsUnasigned,
     AsignAdminInstallation,
-    setInstallations,
     loading: installationLoading,
   } = useInstallation();
 
@@ -51,16 +50,16 @@ const ManageOrdersPage = () => {
         await AsignAdminReparation(id);
       } else if (type === "installation") {
         await AsignAdminInstallation(id);
-        setInstallations((prev) => prev.filter((installation) => installation.id !== id));
+        await InstallationsUnasigned(); // <--- recarga la lista tras aceptar
       }
-      toast.success("Orden aceptada correctamente"),{
+      toast.success("Orden aceptada correctamente", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-      };
+      });
     } catch (err) {
       console.error("Error al aceptar la orden:", err);
       toast.error("Hubo un error al aceptar la orden", {
@@ -130,7 +129,7 @@ const ManageOrdersPage = () => {
           <ul className="space-y-4">
             {Reparations.map((reparation) => (
               <li
-                key={`reparation-${reparation.id}`} // Asegúrate de que la clave sea única
+                key={reparation.id}
                 className="p-6 bg-white shadow-lg rounded-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300"
               >
                 <p className="text-lg font-semibold text-gray-800">
